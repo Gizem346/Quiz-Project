@@ -52,9 +52,48 @@ const fetchQuestions = async (url) => {
     }
 
 
+    const closeModal = () => {
+        setWaiting(true)
+        setCorrect(0)
+        setIsModalOpen(false)
+    }
+
+    //örnek: var dog = {legs:4, name:'doggie'} console.log(dog.name)
+
     const handleChange = (e) => {
-        
+        const name = e.target.name
+        const value = e.target.value
+        setQuiz({...quiz, [name]: value})
     } 
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        const {amount, category, difficulty} = quiz
+
+        const url = `${API_ENDPOINT}amount=${amount}&difficulty=${difficulty}&category=${table[category]}&type=multiple`
+        fetchQuestions(url)
+    }
+
+
+    return(
+        <AppContext.Provider
+            value={{
+                waiting,
+                loading,
+                questions,
+                index,
+                correct,
+                error,
+                isModalOpen,
+                quiz,
+                handleChange,
+                handleSubmit
+            }}
+        >
+            {children}
+
+        </AppContext.Provider>
+    )
 
 }
 
