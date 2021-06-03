@@ -16,7 +16,7 @@ const API_ENDPOINT = 'https://opentdb.com/api.php?'
 const AppContext = React.createContext() 
 
 
-const AppProvider = ({children}) => {
+const AppProvider = ({ children }) => {
     const [waiting, setWaiting] = useState(true)
     const [loading, setLoading] = useState(false)
     const [questions, setQuestions] = useState([])
@@ -51,6 +51,22 @@ const fetchQuestions = async (url) => {
         setWaiting(true)
     }
 
+    const nextQuestion = () => {
+        setIndex((oldIndex) => {
+            const index = oldIndex + 1
+            if (index > questions.length - 1) {
+                openModal()
+                return 0  
+            } else {
+                return index
+            }
+            
+        })
+    }
+
+    openModal = () => {
+        setIsModalOpen(true)
+    }
 
     const closeModal = () => {
         setWaiting(true)
@@ -87,7 +103,9 @@ const fetchQuestions = async (url) => {
                 isModalOpen,
                 quiz,
                 handleChange,
-                handleSubmit
+                handleSubmit,
+                closeModal,
+                nextQuestion
             }}
         >
             {children}
