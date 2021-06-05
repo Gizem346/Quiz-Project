@@ -30,26 +30,28 @@ const AppProvider = ({ children }) => {
     })
 
     const [isModalOpen, setIsModalOpen] = useState(false)
-}
 
-const fetchQuestions = async (url) => {
-    setLoading(true)
-    setWaiting(false)
-    const response = await axios(url).catch((err) => console.log(err))
-    if (response) {
-        const data = response.data.results
-        if (data.length > 0) {
-            setQuestions(data)
-            setLoading(false)
-            setWaiting(false)
-            setError(false)
-        } else {
-            setWaiting(true)
-            setError(true)
+
+    const fetchQuestions = async (url) => {
+        setLoading(true)
+        setWaiting(false)
+        const response = await axios(url).catch((err) => console.log(err))
+        if (response) {
+            const data = response.data.results
+            if (data.length > 0) {
+                setQuestions(data)
+                setLoading(false)
+                setWaiting(false)
+                setError(false)
+        }   else {
+                setWaiting(true)
+                setError(true)
         }
     } else {
         setWaiting(true)
     }
+
+}
 
     const nextQuestion = () => {
         setIndex((oldIndex) => {
@@ -64,8 +66,15 @@ const fetchQuestions = async (url) => {
         })
     }
 
-    openModal = () => {
+    const openModal = () => {
         setIsModalOpen(true)
+    }
+
+    const checkAnswer = (value) => {
+        if(value) {
+            setCorrect((oldState) => oldState + 1)
+        }
+        nextQuestion()
     }
 
     const closeModal = () => {
@@ -105,7 +114,8 @@ const fetchQuestions = async (url) => {
                 handleChange,
                 handleSubmit,
                 closeModal,
-                nextQuestion
+                nextQuestion,
+                checkAnswer
             }}
         >
             {children}
